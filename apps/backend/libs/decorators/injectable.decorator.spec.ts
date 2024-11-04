@@ -1,4 +1,4 @@
-import { Injectable } from './injectable.decorator';
+import { Injectable } from '@libs/decorators/injectable.decorator';
 import { container } from 'tsyringe';
 
 @Injectable()

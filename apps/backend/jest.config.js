@@ -6,7 +6,7 @@ module.exports = {
   },
   moduleNameMapper: {
     '^(\\.{1,2}/.*)\\.(m)?js$': '$1',
-    '@/(.*)': '<rootDir>/src/$1',
+    '@backend/(.*)': '<rootDir>/src/$1',
     '@libs/(.*)': '<rootDir>/libs/$1',
     '@config/(.*)': '<rootDir>/config/$1',
   },
