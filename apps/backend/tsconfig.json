@@ -5,7 +5,7 @@
     "module": "NodeNext",
     "lib": ["ES2022"],
     "outDir": "dist",
-    "rootDir": "./src",
+    "rootDir": "./",
     "moduleResolution": "nodeNext",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
@@ -16,5 +16,5 @@
     "noEmit": false
   },
   "exclude": ["../../node_modules", "node_modules"],
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "libs/**/*"]
 }
