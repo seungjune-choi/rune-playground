@@ -1,5 +1,5 @@
 import { html, Page } from 'rune-ts';
-import { Typography } from '../../components/cells/typography';
+import { Typography } from '../../components/typography';
 import type { RenderHandlerType } from '../../../../../packages/types/renderHandlerType';
 import { type LayoutData, MetaView } from '@rune-ts/server';
 
