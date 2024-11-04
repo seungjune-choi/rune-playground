@@ -1,5 +1,5 @@
 {
-  "name": "playground",
+  "name": "mini-marpple-frontend",
   "version": "0.0.1",
   "description": "",
   "type": "module",
@@ -10,7 +10,6 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
   "dependencies": {
     "@fxts/core": "^1.1.0",
     "@rune-ts/server": "^1.0.14",

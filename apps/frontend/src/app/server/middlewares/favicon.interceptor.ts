@@ -4,7 +4,6 @@ import favicon from '../../../../public/favicon.ico';
 
 export function faviconInterceptor(req: Request, res: Response, next: NextFunction) {
   const parser = new UAParser(req.headers['user-agent']);
-  console.log('parser', parser);
   res.locals.is_mobile = !!parser.getDevice().type;
 
   res.locals.layoutData = {

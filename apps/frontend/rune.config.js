@@ -4,7 +4,7 @@ import { join, resolve } from 'node:path';
  * @type {import('@rune-ts/server').RuneConfigType}
  */
 export default {
-  port: 3000,
+  port: 3001,
   hostname: 'localhost',
   mode: 'render',
   sassOptions: {
