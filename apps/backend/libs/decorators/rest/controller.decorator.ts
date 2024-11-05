@@ -17,12 +17,7 @@ export function Controller(path = ''): ClassDecorator {
       (Reflect.getMetadata(REQUEST_METHOD_TOKEN, target) || []) as IRequest[],
       map((req) => ({
         ...req,
-        path:
-          `${path}${req.path}` === ''
-            ? '/'
-            : `${path}${req.path}`.startsWith('//')
-              ? `${path}${req.path}`.slice(1)
-              : `${path}${req.path}`,
+        path: `${path}/${req.path}`.replace(/\/+/g, '/').replace(/\/$/, ''),
         middlewares: Reflect.getMetadata(MIDDLEWARE_TOKEN, instance[req.methodName]) || [],
       })),
       peek((req) => {

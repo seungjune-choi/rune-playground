@@ -1,4 +1,4 @@
-import { DataSource } from '@libs/database/dataSource';
+import { DataSource } from './dataSource';
 
 describe('DataSource', () => {
   const sut: DataSource = new DataSource({

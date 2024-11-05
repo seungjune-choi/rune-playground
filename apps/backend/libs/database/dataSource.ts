@@ -1,5 +1,4 @@
 import * as FxSQL from 'fxsql';
-import * as console from 'node:console';
 
 interface DataSourceConnectOptions {
   host: string;
