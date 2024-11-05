@@ -1,4 +1,4 @@
-import { html, View } from 'rune-ts';
+import { html, on, View } from 'rune-ts';
 
 export interface TypographyProps {
   text: string;
@@ -7,5 +7,10 @@ export interface TypographyProps {
 export class Typography extends View<TypographyProps> {
   override template() {
     return html`<p>${this.data.text}</p>`;
+  }
+
+  @on('click')
+  private _onClick() {
+    console.log('Typography clicked');
   }
 }

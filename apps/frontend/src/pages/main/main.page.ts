@@ -1,11 +1,14 @@
 import { html, Page } from 'rune-ts';
-import { Typography } from '../../components/typography';
 import type { RenderHandlerType } from '../../../../../packages/types/renderHandlerType';
 import { type LayoutData, MetaView } from '@rune-ts/server';
+import { MainTemplate } from '../../templates/main';
+import { MockUserRepository } from '../../repositories/users/mock.user.repository';
 
 export class MainPage extends Page<object> {
+  private _userRepository = new MockUserRepository();
+  
   override template() {
-    return html` <section>${new Typography({ text: 'Hello, World!' })}</section> `;
+    return html` <div>${new MainTemplate(this._userRepository)}</div> `;
   }
 }
 
