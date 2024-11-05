@@ -1,12 +1,11 @@
 import { container, singleton } from 'tsyringe';
-import { Path } from '@libs/types/path';
 import { forEach, map, peek, pipe } from '@fxts/core';
 import { REQUEST_METHOD_TOKEN } from '@libs/decorators/rest/request-method.decorator';
 import { IRequest } from '@libs/decorators/rest/request.interface';
 import { appRouter } from '@libs/appRouter';
 import * as console from 'node:console';
 
-export function Controller<T extends string>(path?: Path<T>): ClassDecorator {
+export function Controller(path = ''): ClassDecorator {
   return (target: any) => {
     singleton()(target);
     const instance = container.resolve<any>(target);
@@ -15,7 +14,12 @@ export function Controller<T extends string>(path?: Path<T>): ClassDecorator {
       (Reflect.getMetadata(REQUEST_METHOD_TOKEN, target) || []) as IRequest[],
       map((req) => ({
         ...req,
-        path: path ? `${path}${req.path}` : req.path,
+        path:
+          `${path}${req.path}` === ''
+            ? '/'
+            : `${path}${req.path}`.startsWith('//')
+              ? `${path}${req.path}`.slice(1)
+              : `${path}${req.path}`,
       })),
       peek((req) =>
         console.log(

@@ -1,23 +1,21 @@
 import { RequestMethod } from '@libs/enums';
-import { Path } from '@libs/types/path';
 import { append, filter, pipe, toArray } from '@fxts/core';
 import { IRequest } from '@libs/decorators/rest/request.interface';
 
 export const REQUEST_METHOD_TOKEN = Symbol('__request_method__');
 
-export interface RequestMethodOption<T extends string> {
+export interface RequestMethodOption {
   method: RequestMethod;
 
-  path?: Path<T>;
+  path?: string;
 }
 
-export const requestMethod =
-  <T extends string>(options: RequestMethodOption<T>): MethodDecorator =>
+export const requestMethod = ({ method, path = ''}: RequestMethodOption): MethodDecorator =>
   (target, key) => {
     const metadata = pipe(
       (Reflect.getMetadata(REQUEST_METHOD_TOKEN, target.constructor) || []) as IRequest[],
-      filter((req) => !(req.method === options.method && req.path === (options.path ?? '/'))),
-      append({ method: options.method, path: options.path || '/', methodName: key }),
+      filter((req) => !(req.method === method && req.path === path)),
+      append({ method, path, methodName: key }),
       toArray,
     );
 
@@ -25,8 +23,7 @@ export const requestMethod =
   };
 
 const createRequestMethodDecorator =
-  (method: RequestMethod) =>
-  <T extends string = string>(path?: Path<T>) =>
+  (method: RequestMethod) =>(path?: string) =>
     requestMethod({ method, path });
 
 export const Get = createRequestMethodDecorator(RequestMethod.GET);

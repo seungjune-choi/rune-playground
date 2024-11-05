@@ -15,7 +15,7 @@ it('메타데이터 정의 확인', () => {
   expect(metadata).toEqual([
     {
       method: RequestMethod.GET,
-      path: '/',
+      path: '',
       methodName: 'test',
     },
   ]);
@@ -38,12 +38,12 @@ it('같은 path, 다른 method 에도 정상적으로 metadata 가 각각 정의
   expect(metadata).toEqual([
     {
       method: RequestMethod.GET,
-      path: '/',
+      path: '',
       methodName: 'get',
     },
     {
       method: RequestMethod.POST,
-      path: '/',
+      path: '',
       methodName: 'post',
     },
   ]);
@@ -66,7 +66,7 @@ it('같은 path, 같은 method 를 중복 정의할 경우 마지막 정의로 �
   expect(metadata).toEqual([
     {
       method: RequestMethod.GET,
-      path: '/',
+      path: '',
       methodName: 'get2',
     },
   ]);
