@@ -3,7 +3,10 @@ import { forEach, map, peek, pipe } from '@fxts/core';
 import { REQUEST_METHOD_TOKEN } from '@libs/decorators/rest/request-method.decorator';
 import { IRequest } from '@libs/decorators/rest/request.interface';
 import { appRouter } from '@libs/appRouter';
-import * as console from 'node:console';
+import { MIDDLEWARE_TOKEN } from '@libs/decorators';
+import { type NextFunction, Request, Response } from 'express';
+import { resolveMethodParameters } from '@libs/decorators/rest/param.decorator';
+import { AnonymousFunction, ClassConstructor } from '@libs/types';
 
 export function Controller(path = ''): ClassDecorator {
   return (target: any) => {
@@ -20,30 +23,34 @@ export function Controller(path = ''): ClassDecorator {
             : `${path}${req.path}`.startsWith('//')
               ? `${path}${req.path}`.slice(1)
               : `${path}${req.path}`,
+        middlewares: Reflect.getMetadata(MIDDLEWARE_TOKEN, instance[req.methodName]) || [],
       })),
-      peek((req) =>
+      peek((req) => {
         console.log(
           `[INFO] mapping ${req.method.toUpperCase()}:${req.path} to ${target.name}.${req.methodName.toString()}`,
-        ),
-      ),
+        );
+      }),
       forEach((req) => {
-        appRouter[req.method](req.path, asyncHandler(instance[req.methodName].bind(instance)));
+        appRouter[req.method](
+          req.path,
+          req.middlewares,
+          asyncHandler(instance[req.methodName].bind(instance), target.prototype, req.methodName),
+        );
       }),
     );
   };
 }
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-function asyncHandler(handler: Function) {
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  return async (req: any, res: any, next: Function) => {
+function asyncHandler(handler: AnonymousFunction, target: ClassConstructor, methodName: string | symbol) {
+  return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const result = await handler(req, res, next);
+      const args = resolveMethodParameters(req, target, methodName);
+      const result = await handler(...args);
       if (!res.headersSent) {
         res.json(result);
       }
     } catch (error) {
-      next(error); // Pass errors to Express error handlers
+      next(error);
     }
   };
 }

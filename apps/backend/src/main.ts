@@ -3,7 +3,6 @@ import express, { Express } from 'express';
 import { appRouter } from '@libs/appRouter';
 import { DATA_SOURCE, DataSource } from '@libs/database';
 import { container } from 'tsyringe';
-import * as console from 'node:console';
 
 async function bootstrap() {
   const app = express();
@@ -33,6 +32,7 @@ async function initialize(app: Express) {
 
   // set up router
   app.use(appRouter);
+
 }
 
 bootstrap()
