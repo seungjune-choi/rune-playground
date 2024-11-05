@@ -29,7 +29,7 @@ async function initialize(app: Express) {
 
   // import controllers
   require('./app.controller');
-
+  require('./presentation');
   // set up router
   app.use(appRouter);
 
