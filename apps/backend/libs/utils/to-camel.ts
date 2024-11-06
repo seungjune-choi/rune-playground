@@ -6,6 +6,11 @@ export const toCamelDeep = <T extends object>(obj: T): DeepCamelCase<T> => {
   if (Array.isArray(obj)) {
     return obj.map((v) => toCamelDeep(v)) as unknown as DeepCamelCase<T>;
   }
+
+  if (obj instanceof Date) {
+    return obj as unknown as DeepCamelCase<T>;
+  }
+
   if (typeof obj === 'object' && obj !== null) {
     return Object.entries(obj).reduce(
       (acc, [key, value]) => ({
@@ -15,5 +20,6 @@ export const toCamelDeep = <T extends object>(obj: T): DeepCamelCase<T> => {
       {} as DeepCamelCase<T>,
     );
   }
+
   return obj;
 };
