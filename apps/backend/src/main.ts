@@ -3,6 +3,7 @@ import express, { Express } from 'express';
 import { appRouter } from '@libs/appRouter';
 import { DATA_SOURCE, DataSource } from '@libs/database';
 import { container } from 'tsyringe';
+import { httpExceptionFilter } from '@libs/middlewares';
 
 async function bootstrap() {
   const app = express();
@@ -32,7 +33,7 @@ async function initialize(app: Express) {
   require('./presentation');
   // set up router
   app.use(appRouter);
-
+  app.use(httpExceptionFilter);
 }
 
 bootstrap()
