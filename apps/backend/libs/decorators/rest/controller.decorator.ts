@@ -7,6 +7,7 @@ import { MIDDLEWARE_TOKEN } from '@libs/decorators';
 import { type NextFunction, Request, Response } from 'express';
 import { resolveMethodParameters } from '@libs/decorators/rest/param.decorator';
 import { AnonymousFunction, ClassConstructor } from '@libs/types';
+import * as console from 'node:console';
 
 export function Controller(path = ''): ClassDecorator {
   return (target: any) => {

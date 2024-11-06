@@ -6,11 +6,11 @@ export const PARAM_METADATA = Symbol('PARAM_METADATA');
 
 export interface RequestMetadata {
   index: number;
-  type: 'body' | 'param' | 'query';
+  type: 'body' | 'param' | 'query' | 'files' | 'req' | 'res' | 'headers';
   propertyKey?: string;
 }
 
-export function Parameter(type: 'body' | 'param' | 'query', propertyKey?: string): ParameterDecorator {
+export function Parameter(type: RequestMetadata['type'], propertyKey?: string): ParameterDecorator {
   return (target, propertyKeyOrSymbol, parameterIndex) => {
     const requestMetadata : RequestMetadata[] = pipe(
       Reflect.getOwnMetadata(PARAM_METADATA, target, propertyKeyOrSymbol as string) || [],
@@ -25,6 +25,10 @@ export function Parameter(type: 'body' | 'param' | 'query', propertyKey?: string
 export const Body = (propertyKey?: string) => Parameter('body', propertyKey);
 export const Param = (propertyKey?: string) => Parameter('param', propertyKey);
 export const Query = (propertyKey?: string) => Parameter('query', propertyKey);
+export const Files = () => Parameter('files');
+export const Req = () => Parameter('req');
+export const Res = () => Parameter('res');
+export const Headers = (propertyKey?: string) => Parameter('headers', propertyKey);
 
 export function resolveMethodParameters(
   req: Request,
@@ -45,6 +49,18 @@ export function resolveMethodParameters(
           break;
         case 'query':
           args[param.index] = param.propertyKey ? req.query[param.propertyKey] : req.query;
+          break;
+        case 'headers':
+          args[param.index] = param.propertyKey ? req.headers[param.propertyKey] : req.headers;
+          break;
+        case 'files':
+          args[param.index] = req.files;
+          break;
+        case 'req':
+          args[param.index] = req;
+          break;
+        case 'res':
+          args[param.index] = req.res;
           break;
         default:
           throw new Error('Invalid parameter type');
