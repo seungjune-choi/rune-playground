@@ -33,6 +33,10 @@ export class Modal extends Box {
       .querySelector(`.${style['modal-close']}`)!
       .addEventListener('click', () => this.#close());
 
-    this.element().addEventListener('click', () => this.#close());
+    this.element().addEventListener('click', (e) => {
+      if (e.target === this.element()) {
+        this.#close();
+      }
+    });
   }
 }
