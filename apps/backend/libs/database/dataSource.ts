@@ -23,8 +23,6 @@ export class DataSource {
       password: this.options.password,
       database: this.options.database,
     });
-
-    console.log('Connected to database');
   }
 
   public async $disconnect() {
@@ -34,23 +32,26 @@ export class DataSource {
   public $query = <T>(str: TemplateStringsArray, ...values: unknown[]) =>
     this._pool?.QUERY(str, ...values) as Promise<T[]>;
 
-  public $values = (...values: unknown[]) => this._pool.VALUES(values);
+  public $values = <T = unknown>(...values: T[]) => this._pool.VALUES(values);
 
-  public $transaction(callback: (tx: DataSource['$query']) => Promise<void>): Promise<void>;
+  public $set = <T = unknown>(values: T) => this._pool.SET(values);
+
+  public $transaction<T>(callback: (tx: TransactionClient) => Promise<T>): Promise<void>;
   public $transaction(): Promise<{
     $query: DataSource['$query'];
     $commit: () => Promise<void>;
     $rollback: () => Promise<void>;
   }>;
-  public $transaction(callback?: (tx: DataSource['$query']) => Promise<void>) {
+  public $transaction<T>(callback?: <T>(tx: TransactionClient) => Promise<T>) {
     return callback ? this._transactionWithCallback(callback) : this._transaction();
   }
 
-  public _transactionWithCallback = async (callback: (tx: DataSource['$query']) => Promise<void>) => {
+  public _transactionWithCallback = async (callback: <T>(tx: TransactionClient) => Promise<T>) => {
     const { QUERY, COMMIT, ROLLBACK } = await this._pool.TRANSACTION();
     try {
-      await callback(QUERY);
+      const res = await callback({ $query: QUERY });
       await COMMIT();
+      return res;
     } catch (error) {
       await ROLLBACK();
       throw error;
@@ -65,4 +66,8 @@ export class DataSource {
       $rollback: ROLLBACK,
     };
   };
+}
+
+export interface TransactionClient {
+  $query: DataSource['$query'];
 }

@@ -56,8 +56,8 @@ describe('DataSource', () => {
     });
 
     it('트랜잭션 내부에서 쿼리 실행', async () => {
-      await sut.$transaction(async (query) => {
-        const [res] = await query`SELECT 1 as id`;
+      await sut.$transaction(async ({ $query }) => {
+        const [res] = await $query`SELECT 1 as id`;
         expect(res).toEqual({ id: 1 });
       });
     });
@@ -72,8 +72,8 @@ describe('DataSource', () => {
 
       // Act
       try {
-        await sut.$transaction(async (query) => {
-          await query`INSERT INTO users ${sut.$values(user)}`;
+        await sut.$transaction(async ({ $query }) => {
+          await $query`INSERT INTO users ${sut.$values(user)}`;
           throw new Error('unknown error');
         });
       } catch (error) {

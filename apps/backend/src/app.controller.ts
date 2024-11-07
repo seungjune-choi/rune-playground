@@ -9,4 +9,9 @@ export class AppController {
   public healthCheck() {
     return this.appService.healthCheck();
   }
+
+  @Get('/error')
+  public async error() {
+    return await this.appService.error();
+  }
 }
